@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Nhện Sinh Tồn</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/lobby.css">
+</head>
+<body>
+<canvas id="g"></canvas><div id="vig"></div>
+
+<div id="hud" class="off">
+  <div id="pl"><b id="lv">Lv.1</b> <span id="nm"></span><div class="bar"><i id="hpb"></i><u id="hpt"></u></div><div class="bar xp"><i id="xpb"></i></div></div>
+  <div id="lb"></div><button id="gear" title="Cài đặt (Esc)">⚙</button><div id="fps"></div><div id="kf"></div><canvas id="mm" width="150" height="150"></canvas>
+  <div id="sk"><div class="sk" id="kb"><b>🦷</b>Chuột<br>Cắn<s></s></div><div class="sk" id="kq"><b>🕸️</b>Q<br>Tơ Tốc Biến<s></s></div><div class="sk" id="ke"><b>E</b><span></span><s></s></div><div class="sk" id="kr"><b>R</b><span></span><s></s></div></div>
+</div>
+<div id="toast"></div>
+
+<div id="menu"><h1>🕷 NHỆN SINH TỒN</h1><div class="sub" id="mt">Săn nhện bot, ăn hạt năng lượng, thăng cấp để trở nên khổng lồ.<br>Di chuột để bò · Click = cắn · Q = bắn tơ &amp; tốc biến · E / R = chiêu riêng <b>Lưu ý: Game được làm bởi AI</b></div>
+<input id="pn" maxlength="14" placeholder="Tên của bạn" value="Bạn"><div id="cards"></div><div><button id="go">BẮT ĐẦU SĂN</button><button id="gs">⚙ CÀI ĐẶT</button></div></div>
+
+<div id="st" class="hide"><div class="pan"><h2>⚙ Cài đặt</h2>
+<label>Chất lượng đồ họa<select id="s_q"><option value="1">Cao</option><option value="0">Thấp (mượt hơn)</option></select></label>
+<label>Độ zoom camera<input type="range" id="s_z" min=".7" max="1.4" step=".05"></label>
+<label>Số nhện bot<span><input type="range" id="s_b" min="6" max="35" step="1"> <b id="s_bv"></b></span></label>
+<label>Độ khó bot<select id="s_d"><option value="0">Dễ</option><option value="1">Thường</option><option value="2">Khó</option></select></label>
+<label>Hiện tên &amp; thanh máu<input type="checkbox" id="s_n"></label><label>Hiện số sát thương<input type="checkbox" id="s_t"></label><label>Rung màn hình<input type="checkbox" id="s_s"></label><label>Bản đồ nhỏ<input type="checkbox" id="s_m"></label><label>Hiện FPS<input type="checkbox" id="s_f"></label>
+<div style="font-size:12px;opacity:.7">Chuột: bò &amp; cắn · Q: tơ tốc biến · E/R: chiêu riêng · Esc: cài đặt/tạm dừng</div>
+<div class="row"><button id="s_c">Tiếp tục</button><button id="s_r">Về menu</button></div></div></div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+<!-- Game: thứ tự quan trọng (dùng chung biến toàn cục, KHÔNG dùng type="module") -->
+<script src="js/core.js"></script>
+<script src="js/data.js"></script>
+<script src="js/background.js"></script>
+<script src="js/spider.js"></script>
+<script src="js/draw.js"></script>
+<script src="js/combat.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/update.js"></script>
+<script src="js/render.js"></script>
+<script src="js/hud.js"></script>
+<script src="js/game.js"></script>
+
+<!-- Add-on online / sảnh / cửa hàng (chạy sau khi game đã load) -->
+<script src="js/firebase-config.js"></script>
+<script src="js/online.js"></script>
+</body>
+</html>
