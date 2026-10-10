@@ -1,0 +1,22 @@
+// ===== RENDER: camera + vẽ toàn bộ thế giới =====
+function render(){const fo=P&&P.alive?P:(P&&!playing?P:(spiders.find(s=>s.alive)||{x:WS/2,y:WS/2,sz:1}));const dt=.016;
+cam.x+=(fo.x-cam.x)*.12;cam.y+=(fo.y-cam.y)*.12;const tz=Math.min(W,H)/760*1.15/Math.pow(fo.sz,.7)*(playing||fo===P?1:.7)*CFG.zoom;cam.z+=(tz-cam.z)*.04;const z=cam.z;
+X.setTransform(DPR,0,0,DPR,0,0);X.fillStyle='#050605';X.fillRect(0,0,W,H);
+const sx=rr(-1,1)*shk,sy=rr(-1,1)*shk;X.setTransform(DPR*z,0,0,DPR*z,DPR*(W/2-cam.x*z+sx),DPR*(H/2-cam.y*z+sy));
+const vx0=cam.x-W/2/z,vy0=cam.y-H/2/z,vx1=cam.x+W/2/z,vy1=cam.y+H/2/z;
+X.fillStyle=BG;X.fillRect(0,0,WS,WS);
+for(const d of CFG.q?DEC:[]){if(d.x<vx0-80||d.x>vx1+80||d.y<vy0-80||d.y>vy1+80)continue;X.save();X.translate(d.x,d.y);X.rotate(d.a);const s=d.s;
+if(d.t==0){const g=X.createRadialGradient(-8*s,-8*s,2,0,0,34*s);g.addColorStop(0,'#6b7066');g.addColorStop(1,'#25282a');X.fillStyle=g;X.beginPath();X.ellipse(0,0,34*s,24*s,0,0,TAU);X.fill()}
+else if(d.t==1){X.strokeStyle='#2f5a2a';X.lineWidth=3*s;X.lineCap='round';for(let j=0;j<7;j++){const a=j/7*TAU;X.beginPath();X.moveTo(0,0);X.quadraticCurveTo(Math.cos(a)*18*s,Math.sin(a)*18*s,Math.cos(a+.4)*34*s,Math.sin(a+.4)*34*s);X.stroke()}}
+else{X.fillStyle=`hsla(${d.h},90%,60%,.12)`;X.beginPath();X.arc(0,0,45*s,0,TAU);X.fill();X.fillStyle=`hsl(${d.h},70%,55%)`;X.beginPath();X.ellipse(0,0,14*s,10*s,0,0,TAU);X.fill();X.fillStyle='#e8e0c8';X.beginPath();X.arc(0,0,4*s,0,TAU);X.fill()}X.restore()}
+X.strokeStyle='#ff2a3a';X.lineWidth=14;X.shadowColor='#ff2a3a';X.shadowBlur=30;X.strokeRect(0,0,WS,WS);X.shadowBlur=0;
+for(const s of silks){X.globalAlpha=Math.min(1,s.l/s.m*1.5);X.strokeStyle='#fff';X.lineWidth=2.5/z*.9+1;X.beginPath();X.moveTo(s.x1,s.y1);X.lineTo(s.x2,s.y2);X.stroke();X.strokeStyle='rgba(180,220,255,.5)';X.lineWidth=7;X.stroke();X.fillStyle='#fff';X.beginPath();X.arc(s.x2,s.y2,5,0,TAU);X.fill()}X.globalAlpha=1;
+for(const zn of zones){const f=Math.min(1,zn.l/zn.m*3);if(zn.t=='c'){for(let j=0;j<8;j++){const a=T*.6+j*.8,rd=zn.r*.55*(.5+.5*Math.sin(T+j));const cx=zn.x+Math.cos(a)*rd,cy=zn.y+Math.sin(a)*rd,g=X.createRadialGradient(cx,cy,0,cx,cy,zn.r*.6);const cl=zn.col||'110,255,70';g.addColorStop(0,`rgba(${cl},${.28*f})`);g.addColorStop(1,`rgba(${cl},0)`);X.fillStyle=g;X.beginPath();X.arc(cx,cy,zn.r*.6,0,TAU);X.fill()}}
+else{X.strokeStyle=`rgba(255,255,255,${.55*f})`;X.lineWidth=1.8;for(let j=0;j<10;j++){const a=j/10*TAU;X.beginPath();X.moveTo(zn.x,zn.y);X.lineTo(zn.x+Math.cos(a)*zn.r,zn.y+Math.sin(a)*zn.r);X.stroke()}for(let k=1;k<=4;k++){X.beginPath();for(let j=0;j<=10;j++){const a=j/10*TAU,rr2=zn.r*k/4*(j%2?.92:1);X.lineTo(zn.x+Math.cos(a)*rr2,zn.y+Math.sin(a)*rr2)}X.stroke()}}}
+const fs=P?1+(P.sz-1)*.35:1;for(const f of foods){if(f.x<vx0-20||f.x>vx1+20||f.y<vy0-20||f.y>vy1+20)continue;const r=(4+Math.sqrt(f.v)*1.4)*fs*(1+Math.sin(T*3+f.ph)*.1);X.fillStyle=f.c;X.globalAlpha=.22;X.beginPath();X.arc(f.x,f.y,r*2.3,0,TAU);X.fill();X.globalAlpha=1;X.beginPath();X.arc(f.x,f.y,r,0,TAU);X.fill();X.fillStyle='rgba(255,255,255,.7)';X.beginPath();X.arc(f.x-r*.3,f.y-r*.3,r*.3,0,TAU);X.fill()}
+const vis=spiders.filter(s=>s.x>vx0-150*s.sz&&s.x<vx1+150*s.sz&&s.y>vy0-150*s.sz&&s.y<vy1+150*s.sz&&(s.alive)).sort((a,b)=>a.sz-b.sz);
+for(const s of vis)drawSpider(X,s);if(CFG.names)for(const s of vis)drawTag(X,s);
+X.globalCompositeOperation='lighter';for(const p of projs){X.fillStyle=PC[p.t];X.beginPath();X.arc(p.x,p.y,p.r,0,TAU);X.fill();X.globalAlpha=.3;X.beginPath();X.arc(p.x,p.y,p.r*2.2,0,TAU);X.fill();X.globalAlpha=1}
+for(const f of fxs){X.strokeStyle=f.c;X.globalAlpha=f.l/f.m;X.lineWidth=f.w;X.beginPath();X.arc(f.x,f.y,f.r,0,TAU);X.stroke()}X.globalAlpha=1;
+for(const p of parts){X.globalAlpha=Math.max(0,p.l/p.m);X.fillStyle=p.c;X.beginPath();X.arc(p.x,p.y,p.r,0,TAU);X.fill()}X.globalAlpha=1;X.globalCompositeOperation='source-over';
+X.font=`800 ${18/z}px system-ui`;X.textAlign='center';X.lineWidth=3/z;X.strokeStyle='#000';for(const t of texts){X.globalAlpha=Math.min(1,t.l*2);X.fillStyle=t.c;X.strokeText(t.s,t.x,t.y);X.fillText(t.s,t.x,t.y)}X.globalAlpha=1}
