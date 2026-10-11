@@ -1,6 +1,6 @@
 // ===== AI: sinh thức ăn/bot và hành vi của bot =====
 function spawnFood(){const c=R();foods.push({x:rr(40,WS-40),y:rr(40,WS-40),v:c<.7?3:c<.93?6:12,c:`hsl(${rr(0,360)|0},90%,62%)`,ph:R()*6})}
-function spawnBot(init){const b=mk(R()*SP.length|0,true,NAMES[R()*NAMES.length|0]);b.lvl=init?1+(R()*R()*8|0):Math.max(1,Math.round(rr(1,1+(P?P.lvl*.8:3))));stats(b);b.hp=b.mh;
+function spawnBot(init){const b=mk(R()*SP.length|0,true,NAMES[R()*NAMES.length|0]);b.lvl=init?1:Math.max(1,Math.round(rr(1,1+(P?P.lvl*.8:3))));stats(b);b.hp=b.mh;
 if(P)for(let i=0;i<20&&Math.hypot(b.x-P.x,b.y-P.y)<900;i++){b.x=rr(200,WS-200);b.y=rr(200,WS-200)}b.inv=1.5;initLegs(b);spiders.push(b)}
 function nearFood(s,mx){let b=null,bd=mx;for(const f of foods){const d=Math.abs(f.x-s.x)+Math.abs(f.y-s.y);if(d<bd){bd=d;b=f}}return b}
 function ai(s,dt){s.ai-=dt;const vis=650+s.sz*100;
