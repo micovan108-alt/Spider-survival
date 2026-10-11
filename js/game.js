@@ -17,7 +17,7 @@ function releaseBite(){mobileInput.bite=false}biteButton.addEventListener('point
 document.querySelectorAll('.touch-skill').forEach(b=>b.addEventListener('pointerdown',e=>{e.preventDefault();if(playing&&P&&P.alive)cast(P,b.dataset.skill)}));
 function syncMobileControls(){const active=touchCapable()&&playing&&P&&P.alive&&!paused;mobileControls.classList.toggle('active',!!active);document.body.classList.toggle('mobile-game-active',!!active);if(!active){mobileInput.active=false;mobileInput.mv=0;mobileInput.bite=false}}
 C.addEventListener('mousemove',e=>{mouse.sx=e.clientX;mouse.sy=e.clientY});C.addEventListener('mousedown',e=>{if(e.button==0)mouse.down=true;mouse.sx=e.clientX;mouse.sy=e.clientY});addEventListener('mouseup',()=>mouse.down=false);C.addEventListener('contextmenu',e=>e.preventDefault());
-addEventListener('keydown',e=>{if(!playing||!P||!P.alive||e.target.id=='pn')return;const k=e.key.toLowerCase();if('qer'.includes(k)&&k.length==1){cast(P,k);e.preventDefault()}});
+addEventListener('keydown',e=>{if(!playing||!P||!P.alive||e.target.id=='pn')return;const k=e.key.toLowerCase();if(k==='f'&&window.COCOON_MATCH){window.THROW_COCOON?.();e.preventDefault();return}if('qer'.includes(k)&&k.length==1){cast(P,k);e.preventDefault()}});
 
 // ---------- start
 function start(){spiders=[];foods=[];projs=[];zones=[];silks=[];fxs=[];parts=[];texts=[];$('kf').innerHTML='';mobileInput={active:false,x:1,y:0,mv:0,bite:false};
