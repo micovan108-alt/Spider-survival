@@ -3,7 +3,7 @@
 function updSpider(s,dt){for(const k in s.cd)s.cd[k]=Math.max(0,s.cd[k]-dt);for(const k of['bite','hit','stun','slow','pois','inv','combat'])s[k]=Math.max(0,s[k]-dt);
 if(s.pois>0){s.pf-=dt;if(s.pf<=0){s.pf=.5;hurt(s,s.pdmg||3,s.psrc)}}
 if(!s.alive)return;if(s.combat<=0)s.hp=Math.min(s.mh,s.hp+s.mh*.012*dt);
-if(s.bot)ai(s,dt);else{s.aim=Math.atan2(mouse.y-s.y,mouse.x-s.x);const d=Math.hypot(mouse.x-s.x,mouse.y-s.y);s.mv=Math.min(1,Math.max(0,(d-17*s.sz*.5)/(60*s.sz)));if(mouse.down&&playing)bite(s)}
+if(s.bot)ai(s,dt);else if(s===P&&touchCapable()){if(mobileInput.active){s.aim=Math.atan2(mobileInput.y,mobileInput.x);s.mv=mobileInput.mv}else s.mv=0;if(mobileInput.bite&&playing)bite(s)}else{s.aim=Math.atan2(mouse.y-s.y,mouse.x-s.x);const d=Math.hypot(mouse.x-s.x,mouse.y-s.y);s.mv=Math.min(1,Math.max(0,(d-17*s.sz*.5)/(60*s.sz)));if(mouse.down&&playing)bite(s)}
 if(s.spin>0){s.spin-=dt;s.a+=18*dt;s.stk-=dt;if(s.stk<=0){s.stk=.12;for(const o of spiders)if(o!==s&&o.alive&&!sameTeam(s,o)&&Math.hypot(o.x-s.x,o.y-s.y)<17*s.sz*2.7+o.sz*17){hurt(o,s.dmg*.7,s);knock(o,s,260)}}}
 else if(s.stun<=0)s.a+=Math.max(-(s.bot?7:11)*dt,Math.min((s.bot?7:11)*dt,ad(s.a,s.aim)));
 if(s.drain>0){s.drain-=dt;s.dtk-=dt;const t=s.dt;if(!t||!t.alive||Math.hypot(t.x-s.x,t.y-s.y)>600*s.sz)s.drain=0;else if(s.dtk<=0){s.dtk=.2;hurt(t,s.dmg*.3,s);s.hp=Math.min(s.mh,s.hp+s.dmg*.25)}}

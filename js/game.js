@@ -1,10 +1,26 @@
 // ===== GAME: input, bắt đầu ván, cài đặt, vòng lặp chính =====
 // ---------- input
+let mobileInput={active:false,x:1,y:0,mv:0,bite:false};
+const touchCapable=()=>navigator.maxTouchPoints>0||matchMedia('(pointer:coarse)').matches;
+document.body.insertAdjacentHTML('beforeend',`<div id="mobileControls" aria-label="Điều khiển cảm ứng"><div id="movePad" class="move-pad" aria-label="Joystick di chuyển"><span class="move-ring"><i id="moveKnob"></i></span><small>DI CHUYỂN</small></div><div id="actionPad" class="action-pad" aria-label="Điều khiển chiến đấu"><button id="touchQ" class="touch-skill skill-q" data-skill="q" aria-label="Chiêu Q">Q</button><button id="touchE" class="touch-skill skill-e" data-skill="e" aria-label="Chiêu E">E</button><button id="touchR" class="touch-skill skill-r" data-skill="r" aria-label="Chiêu R">R</button><button id="touchBite" class="touch-bite" aria-label="Cắn">🦷<small>CẮN</small></button></div></div>`);
+function syncMobileViewport(){const touch=touchCapable();document.body.classList.toggle('touch-device',touch);document.documentElement.classList.toggle('force-landscape',touch&&matchMedia('(orientation:portrait)').matches);rs()}
+syncMobileViewport();addEventListener('resize',syncMobileViewport);addEventListener('orientationchange',syncMobileViewport);screen.orientation?.addEventListener?.('change',syncMobileViewport);
+async function requestLandscape(){if(!touchCapable())return;syncMobileViewport();try{if(!document.fullscreenElement&&document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen();if(screen.orientation?.lock)await screen.orientation.lock('landscape')}catch(e){}syncMobileViewport()}
+document.addEventListener('pointerdown',e=>{if(e.target.closest('#bm,#bo,.mode-choice'))requestLandscape()},true);
+const movePad=$('movePad'),moveKnob=$('moveKnob'),mobileControls=$('mobileControls');let movePointer=null;
+function moveStick(e){const box=movePad.getBoundingClientRect(),limit=box.width*.34,dx=e.clientX-(box.left+box.width/2),dy=e.clientY-(box.top+box.height/2),length=Math.hypot(dx,dy),scale=length>limit?limit/length:1,x=dx*scale,y=dy*scale;mobileInput.active=true;mobileInput.x=length?dx/length:1;mobileInput.y=length?dy/length:0;mobileInput.mv=Math.min(1,length/limit);moveKnob.style.transform=`translate(${x}px,${y}px)`}
+movePad.addEventListener('pointerdown',e=>{e.preventDefault();movePointer=e.pointerId;movePad.setPointerCapture(e.pointerId);moveStick(e)});movePad.addEventListener('pointermove',e=>{if(e.pointerId===movePointer)moveStick(e)});
+function releaseStick(e){if(e.pointerId!==movePointer)return;movePointer=null;mobileInput.active=false;mobileInput.mv=0;moveKnob.style.transform='translate(0,0)'}
+movePad.addEventListener('pointerup',releaseStick);movePad.addEventListener('pointercancel',releaseStick);movePad.addEventListener('lostpointercapture',releaseStick);
+const biteButton=$('touchBite');biteButton.addEventListener('pointerdown',e=>{e.preventDefault();biteButton.setPointerCapture(e.pointerId);mobileInput.bite=true});
+function releaseBite(){mobileInput.bite=false}biteButton.addEventListener('pointerup',releaseBite);biteButton.addEventListener('pointercancel',releaseBite);biteButton.addEventListener('lostpointercapture',releaseBite);
+document.querySelectorAll('.touch-skill').forEach(b=>b.addEventListener('pointerdown',e=>{e.preventDefault();if(playing&&P&&P.alive)cast(P,b.dataset.skill)}));
+function syncMobileControls(){const active=touchCapable()&&playing&&P&&P.alive&&!paused;mobileControls.classList.toggle('active',!!active);document.body.classList.toggle('mobile-game-active',!!active);if(!active){mobileInput.active=false;mobileInput.mv=0;mobileInput.bite=false}}
 C.addEventListener('mousemove',e=>{mouse.sx=e.clientX;mouse.sy=e.clientY});C.addEventListener('mousedown',e=>{if(e.button==0)mouse.down=true;mouse.sx=e.clientX;mouse.sy=e.clientY});addEventListener('mouseup',()=>mouse.down=false);C.addEventListener('contextmenu',e=>e.preventDefault());
 addEventListener('keydown',e=>{if(!playing||!P||!P.alive||e.target.id=='pn')return;const k=e.key.toLowerCase();if('qer'.includes(k)&&k.length==1){cast(P,k);e.preventDefault()}});
 
 // ---------- start
-function start(){spiders=[];foods=[];projs=[];zones=[];silks=[];fxs=[];parts=[];texts=[];$('kf').innerHTML='';
+function start(){spiders=[];foods=[];projs=[];zones=[];silks=[];fxs=[];parts=[];texts=[];$('kf').innerHTML='';mobileInput={active:false,x:1,y:0,mv:0,bite:false};
 P=mk(sel,false,($('pn').value||'Bạn').trim().slice(0,14));P.x=rr(1500,3500);P.y=rr(1500,3500);P.inv=2.5;initLegs(P);spiders.push(P);for(let i=0;i<NB;i++)spawnBot(true);
 cam.x=P.x;cam.y=P.y;const p=SP[sel];$('nm').textContent=P.name+' · '+p.n;$('ke').querySelector('span').innerHTML=p.e;$('kr').querySelector('span').innerHTML=p.r;
 $('menu').classList.add('hide');$('hud').classList.remove('off');playing=true;syncBackgroundMusic();soundFx('start');toast('SĂN ĐI! 🕷')}
@@ -31,5 +47,5 @@ applyCFG();
 // ---------- vòng lặp chính
 let last=performance.now();
 function loop(n){const dt=Math.min(.05,(n-last)/1000);last=n;if(mouse.sx!=null){mouse.x=(mouse.sx-W/2)/cam.z+cam.x;mouse.y=(mouse.sy-H/2)/cam.z+cam.y}
-if(!paused)update(dt);syncBackgroundMusic();render();if(playing)hud();fps+=(1/Math.max(dt,.001)-fps)*.05;if(CFG.fps)$('fps').textContent=Math.round(fps)+' FPS';requestAnimationFrame(loop)}
+if(!paused)update(dt);syncMobileControls();syncBackgroundMusic();render();if(playing)hud();fps+=(1/Math.max(dt,.001)-fps)*.05;if(CFG.fps)$('fps').textContent=Math.round(fps)+' FPS';requestAnimationFrame(loop)}
 requestAnimationFrame(loop);
