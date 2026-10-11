@@ -11,28 +11,28 @@ function earn(n){pf.coins+=n;saveP();inLobby()?toast('+'+n+' 🪙'):feed('+'+n+'
 
 // ---------- LOBBY DOM
 const bar=(l,v,c)=>`<div class="br"><span>${l}</span><i><b style="width:${v}%;background:${c}"></b></i></div>`;
-const stb=p=>bar('Máu',p.hp/1.5*100,'#ff5a6a')+bar('Sát thương',p.dm/1.25*100,'#ffb347')+bar('Tốc độ',p.sp/1.3*100,'#5dffb0');
-document.body.insertAdjacentHTML('beforeend',`<div id="lb2"><div class="lt"><div class="lg">🕷 NHỆN SINH TỒN</div><span class="chip" id="lo">🟢 …</span><span class="chip gold" id="co"></span><span class="chip" id="who"></span><button class="mb" id="gl"></button><button class="mb" id="gs2">⚙</button></div>
-<div class="tabs"><button class="tab on" data-t="tp">⚔ CHƠI</button><button class="tab" data-t="ts">🛒 CỬA HÀNG</button></div>
-<div class="main" id="tp"><div class="glass" style="width:430px;max-width:100%"><div id="pvw"><canvas id="pv" width="420" height="300" style="width:100%"></canvas></div><h2 id="pnm" style="margin:6px 0"></h2><div id="pst"></div><div id="sel" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px"></div></div>
-<div class="glass" style="width:340px;max-width:100%"><div id="rb"></div><div style="font-size:12px;opacity:.7;margin-bottom:6px">TÊN HIỂN THỊ</div><input id="ln" maxlength="14"><button class="big" id="bm" style="background:linear-gradient(#2fd36a,#0c8a3c)">⚡ TÌM TRẬN NGAY</button><div style="font-size:11px;opacity:.65;text-align:center;margin-top:5px">Tự ghép phòng online · tối đa 15 nhện (người + bot)</div><button class="big" id="bo" style="background:linear-gradient(#3a4a5a,#1d2733);font-size:15px;padding:12px">🤖 LUYỆN TẬP (OFFLINE)</button><button class="big" id="dl" style="background:linear-gradient(#ffb300,#c26a00);font-size:15px;padding:12px"></button><div id="stt" style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:14px"></div></div></div>
+const stb=p=>bar('Máu',p.hp/1.5*100,'#b8c77c')+bar('Sát thương',p.dm/1.25*100,'#dc9060')+bar('Tốc độ',p.sp/1.3*100,'#83b7a0');
+document.body.insertAdjacentHTML('beforeend',`<div id="lb2"><div class="lt"><div class="lg">NHỆN SINH TỒN <span>ONLINE ARENA</span></div><span class="chip" id="lo">ĐANG KẾT NỐI</span><span class="chip gold" id="co"></span><span class="chip" id="who"></span><button class="mb" id="gl"></button><button class="mb" id="gs2">CÀI ĐẶT</button></div>
+<div class="tabs"><button class="tab on" data-t="tp">ĐẤU TRƯỜNG</button><button class="tab" data-t="ts">BỘ SƯU TẬP</button></div>
+<div class="main" id="tp"><div class="glass preview-panel"><div class="eyebrow">LỰA CHỌN NHÂN VẬT</div><div id="pvw"><canvas id="pv" width="420" height="300"></canvas></div><h2 id="pnm" style="margin:12px 0 6px"></h2><div id="pst"></div><div id="sel" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px"></div></div>
+<div class="glass match-panel"><div class="eyebrow">TRẬN ĐẤU</div><h2 class="panel-title">Sẵn sàng vào trận</h2><div id="rb"></div><label class="field-label" for="ln">TÊN HIỂN THỊ</label><input id="ln" maxlength="14"><button class="big" id="bm">TÌM TRẬN ONLINE</button><p class="help-text">Ghép trận tự động · tối đa 15 người chơi và bot</p><button class="big" id="bo">LUYỆN TẬP OFFLINE</button><button class="big" id="dl"></button><div id="stt" class="lobby-metrics"></div></div></div>
 <div class="main" id="ts" style="display:none"></div></div>
-<div id="mm2" style="display:none;position:fixed;inset:0;z-index:12;background:#000d;align-items:center;justify-content:center;flex-direction:column;gap:18px;color:#fff;font-family:system-ui"><div class="spn"></div><div id="mmt" style="font:800 22px system-ui;text-align:center"></div><button class="mb" id="mmc">Hủy</button></div>`);
+<div id="mm2" style="display:none;position:fixed;inset:0;z-index:12;background:#000d;align-items:center;justify-content:center;flex-direction:column;gap:18px;color:#fff;font-family:Bahnschrift,Segoe UI,sans-serif"><div class="spn"></div><div id="mmt" style="font:700 20px Bahnschrift,Segoe UI,sans-serif;text-align:center"></div><button class="mb" id="mmc">HỦY</button></div>`);
 SP.forEach((p,i)=>{const d=document.createElement('div');d.className='glass sc';d.innerHTML=`<canvas width="190" height="120"></canvas><h3>${p.n}</h3>${stb(p)}<div class="sk"><b>E · ${p.e}</b><br><small>${p.ed}</small></div><div class="sk"><b>R · ${p.r}</b><br><small>${p.rd}</small></div><button class="big" style="font-size:14px;padding:10px"></button>`;
 const s=mk(i,true,'');s.x=s.y=0;s.a=-.3;s.sz=1.05;initLegs(s);const c=d.querySelector('canvas').getContext('2d');c.translate(88,62);c.scale(.8,.8);drawSpider(c,s);
 d.querySelector('button').onclick=()=>{if(pf.owned.includes(i))setSel(i);else if(pf.coins<PR[i])toast('Cần '+PR[i]+' xu!');else{pf.coins-=PR[i];pf.owned.push(i);saveP();toast('🔓 Đã mở khóa '+p.n);setSel(i)}};$('ts').appendChild(d)});
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x==b));$('tp').style.display=b.dataset.t=='tp'?'flex':'none';$('ts').style.display=b.dataset.t=='ts'?'flex':'none'});
 function setSel(i){sel=i;pvS=mk(i,true,'');pvS.x=pvS.y=0;pvS.sz=1.7;initLegs(pvS);refresh()}
 function refresh(){const ok=pf.day!==new Date().toDateString(),p=SP[sel];
-$('co').textContent='🪙 '+pf.coins;$('who').textContent=(acc.google?'🔵 ':'👤 ')+acc.name;$('gl').textContent=acc.google?'Đăng xuất':'🔑 Đăng nhập Google';
-$('dl').textContent=ok?'🎁 NHẬN THƯỞNG NGÀY +150 🪙':'✔ Đã nhận thưởng hôm nay';$('dl').disabled=!ok;
-$('stt').innerHTML=`<span class="chip">🏆 Lv.${pf.best}</span><span class="chip">⚔ ${pf.kills} hạ gục</span><span class="chip">🕷 ${pf.owned.length}/${SP.length}</span>`;
+$('co').textContent=pf.coins+' XU';$('who').textContent=(acc.google?'GOOGLE':'KHÁCH')+' · '+acc.name;$('gl').textContent=acc.google?'ĐĂNG XUẤT':'ĐĂNG NHẬP GOOGLE';
+$('dl').textContent=ok?'NHẬN THƯỞNG NGÀY · +150 XU':'ĐÃ NHẬN THƯỞNG HÔM NAY';$('dl').disabled=!ok;
+$('stt').innerHTML=`<span class="chip">KỶ LỤC · LV.${pf.best}</span><span class="chip">HẠ GỤC · ${pf.kills}</span><span class="chip">NHỆN · ${pf.owned.length}/${SP.length}</span>`;
 $('pnm').textContent=p.n;$('pst').innerHTML=stb(p)+`<div class="sk"><b>E · ${p.e}</b> — ${p.ed}<br><b>R · ${p.r}</b> — ${p.rd}</div>`;
 $('sel').innerHTML=pf.owned.map(i=>`<button class="mb ${i==sel?'on':''}" data-i="${i}">${SP[i].n}</button>`).join('');$('sel').querySelectorAll('button').forEach(b=>b.onclick=()=>setSel(+b.dataset.i));
-document.querySelectorAll('.sc').forEach((d,i)=>{const o=pf.owned.includes(i),b=d.querySelector('button');d.classList.toggle('on',i==sel);b.textContent=o?(i==sel?'✔ ĐANG CHỌN':'CHỌN'):'🔓 MỞ KHÓA · 🪙'+PR[i];b.style.background=o?'#2a6b3a':'linear-gradient(#ffb300,#c26a00)';d.querySelector('canvas').style.filter=o?'':'brightness(.35) grayscale(.6)'})}
+document.querySelectorAll('.sc').forEach((d,i)=>{const o=pf.owned.includes(i),b=d.querySelector('button');d.classList.toggle('on',i==sel);b.textContent=o?(i==sel?'ĐANG CHỌN':'CHỌN NHỆN'):'MỞ KHÓA · '+PR[i]+' XU';b.classList.toggle('owned',o);b.classList.toggle('selected',o&&i==sel);d.querySelector('canvas').style.filter=o?'':'brightness(.35) grayscale(.6)'})}
 (function lp(){if(inLobby()&&$('tp').style.display!=='none'&&pvS){const c=$('pv').getContext('2d');c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,420,300);c.save();c.translate(215,150);c.scale(1.1,1.1);pvS.a=-.4+Math.sin(T*.8)*.12;updLegs(pvS,.016);drawSpider(c,pvS);c.restore()}requestAnimationFrame(lp)})();
 function lob(v){$('lb2').classList.toggle('h',!v);if(v){$('hud').classList.add('off');refresh();cnt()}}
-async function cnt(){if(!db)return $('lo').textContent='⚪ Offline';try{const d=(await db.ref('rooms').once('value')).val()||{};let n=0;for(const k in d)n+=Object.keys(d[k].players||{}).length;$('lo').textContent='🟢 '+n+' đang chơi online'}catch(e){$('lo').textContent='⚪ Chưa kết nối'}}
+async function cnt(){if(!db)return $('lo').textContent='OFFLINE';try{const d=(await db.ref('rooms').once('value')).val()||{};let n=0;for(const k in d)n+=Object.keys(d[k].players||{}).length;$('lo').textContent=n+' NGƯỜI ĐANG CHƠI'}catch(e){$('lo').textContent='CHƯA KẾT NỐI'}}
 setInterval(()=>inLobby()&&cnt(),10000);
 $('dl').onclick=()=>{pf.day=new Date().toDateString();earn(150)};
 $('ln').value=acc.name;$('ln').onchange=()=>{if(!acc.google)localStorage.gname=$('ln').value.trim().slice(0,14)};
@@ -67,12 +67,12 @@ if(r.committed){claimed=id;db.ref('rooms/'+id+'/players/'+acc.uid).onDisconnect(
 $('bm').onclick=async()=>{if(!db){toast('Không có kết nối → chơi luyện tập');return play(null)}
 if(!pf.owned.includes(sel)){toast('Hãy mở khóa nhện này trước!');return}
 acc.name=($('ln').value||'Bạn').trim().slice(0,14);
-cancel=false;$('mm2').style.display='flex';$('mmt').textContent='🔍 Đang tìm trận...';
+cancel=false;$('mm2').style.display='flex';$('mmt').textContent='Đang tìm trận...';
 const [r]=await Promise.all([claimRoom(),new Promise(x=>setTimeout(x,1100))]);
 if(cancel){unclaim();return}
 if(r==='err'){$('mm2').style.display='none';toast('Lỗi kết nối (kiểm tra Rules)');return}
 if(!r){$('mm2').style.display='none';toast('Tất cả phòng đã đầy!');return}
-$('mmt').innerHTML=`✅ Đã tìm thấy trận!<br><small style="opacity:.75">Phòng ${r.id.slice(1)} · ${r.n} người chơi khác · bot yếu nhất sẽ nhường chỗ</small>`;
+$('mmt').innerHTML=`Đã tìm thấy trận<br><small style="opacity:.75">Phòng ${r.id.slice(1)} · ${r.n} người chơi khác · bot yếu nhất sẽ nhường chỗ</small>`;
 await new Promise(x=>setTimeout(x,900));if(cancel){unclaim();return}
 $('mm2').style.display='none';claimed=null;play(r.id)};
 $('mmc').onclick=()=>{cancel=true;unclaim();$('mm2').style.display='none'};
