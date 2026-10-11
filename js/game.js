@@ -1,7 +1,7 @@
 // ===== GAME: input, bắt đầu ván, cài đặt, vòng lặp chính =====
 // ---------- input
 let mobileInput={active:false,x:1,y:0,mv:0,bite:false};
-const touchCapable=()=>navigator.maxTouchPoints>0||matchMedia('(pointer:coarse)').matches;
+const touchCapable=()=>navigator.maxTouchPoints>0||matchMedia('(pointer:coarse)').matches||'ontouchstart'in window||!!navigator.userAgentData?.mobile||/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 document.body.insertAdjacentHTML('beforeend',`<div id="mobileControls" aria-label="Điều khiển cảm ứng"><div id="movePad" class="move-pad" aria-label="Joystick di chuyển"><span class="move-ring"><i id="moveKnob"></i></span><small>DI CHUYỂN</small></div><div id="actionPad" class="action-pad" aria-label="Điều khiển chiến đấu"><button id="touchQ" class="touch-skill skill-q" data-skill="q" aria-label="Chiêu Q">Q</button><button id="touchE" class="touch-skill skill-e" data-skill="e" aria-label="Chiêu E">E</button><button id="touchR" class="touch-skill skill-r" data-skill="r" aria-label="Chiêu R">R</button><button id="touchBite" class="touch-bite" aria-label="Cắn">🦷<small>CẮN</small></button></div></div>`);
 function syncMobileViewport(){const touch=touchCapable();document.body.classList.toggle('touch-device',touch);document.documentElement.classList.toggle('force-landscape',touch&&matchMedia('(orientation:portrait)').matches);rs()}
 syncMobileViewport();addEventListener('resize',syncMobileViewport);addEventListener('orientationchange',syncMobileViewport);screen.orientation?.addEventListener?.('change',syncMobileViewport);
